@@ -223,8 +223,8 @@
       el.addEventListener("mouseleave", () => { el.style.transform = ""; });
     });
 
-    // project card radial glow follows cursor
-    $$(".proj-card").forEach((el) => {
+    // radial glow follows cursor (project + skill cards)
+    $$(".proj-card, .skill-card").forEach((el) => {
       el.addEventListener("mousemove", (e) => {
         const r = el.getBoundingClientRect();
         el.style.setProperty("--mx", e.clientX - r.left + "px");
@@ -415,6 +415,148 @@
     readColors();
     resize();
     draw();
+  })();
+
+  /* ---------------- Accent themer ---------------- */
+  const ACCENTS = [
+    { id: "cyan",    label: "Cyan",    color: "#22d3ee" },
+    { id: "violet",  label: "Violet",  color: "#a855f7" },
+    { id: "emerald", label: "Emerald", color: "#34d399" },
+    { id: "amber",   label: "Amber",   color: "#fbbf24" },
+    { id: "rose",    label: "Rose",    color: "#fb7185" },
+  ];
+  function applyAccent(id) {
+    if (id === "cyan") document.documentElement.removeAttribute("data-accent");
+    else document.documentElement.setAttribute("data-accent", id);
+    try { localStorage.setItem("accent", id); } catch (e) {}
+    window.dispatchEvent(new Event("themechange"));
+  }
+  applyAccent(localStorage.getItem("accent") || "cyan");
+
+  /* ---------------- Toast ---------------- */
+  function toast(msg) {
+    let t = $("#toast");
+    if (!t) { t = document.createElement("div"); t.id = "toast"; t.className = "toast"; document.body.appendChild(t); }
+    t.textContent = msg;
+    requestAnimationFrame(() => t.classList.add("show"));
+    clearTimeout(t._timer);
+    t._timer = setTimeout(() => t.classList.remove("show"), 1900);
+  }
+
+  /* ---------------- Command palette (⌘K / Ctrl K) ---------------- */
+  (() => {
+    const cmdk = $("#cmdk");
+    if (!cmdk) return;
+    const input = $("#cmdkInput");
+    const listEl = $("#cmdkList");
+    const trigger = $("#cmdkTrigger");
+    const isMac = /mac|iphone|ipad/i.test(navigator.platform || navigator.userAgent);
+    const keyEl = $("#cmdkKey");
+    if (keyEl && !isMac) keyEl.textContent = "Ctrl";
+
+    const nav = (sel) => () => { const el = $(sel); if (el) el.scrollIntoView({ behavior: "smooth" }); };
+    const ext = (url) => () => window.open(url, "_blank", "noopener");
+    const mail = () => { window.location.href = "mailto:hvsisodia02@gmail.com"; };
+    const copyEmail = () => {
+      const addr = "hvsisodia02@gmail.com";
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(addr).then(() => toast("Email copied  ✓"), mail);
+      } else { mail(); }
+    };
+
+    const commands = [
+      { group: "Navigate", glyph: "#", label: "Home",       run: nav("#top") },
+      { group: "Navigate", glyph: "#", label: "About",      run: nav("#about") },
+      { group: "Navigate", glyph: "#", label: "Stack",      run: nav("#stack") },
+      { group: "Navigate", glyph: "#", label: "Experience", run: nav("#work") },
+      { group: "Navigate", glyph: "#", label: "Projects",   run: nav("#projects") },
+      { group: "Navigate", glyph: "#", label: "Contact",    run: nav("#contact") },
+      { group: "Actions", glyph: "@", label: "Copy email",          meta: "hvsisodia02@gmail.com", run: copyEmail },
+      { group: "Actions", glyph: "◐", label: "Toggle light / dark", run: () => $("#themeToggle").click() },
+      { group: "Links", glyph: "↗", label: "GitHub",       meta: "@WildxHV",        run: ext("https://github.com/WildxHV") },
+      { group: "Links", glyph: "↗", label: "LinkedIn",     run: ext("https://www.linkedin.com/in/harshvardhansinghsisodia/") },
+      { group: "Links", glyph: "↗", label: "CookFit repo", meta: "WildxHV/cookfit", run: ext("https://github.com/WildxHV/cookfit") },
+      { group: "Links", glyph: "✉", label: "Email me",     run: mail },
+      ...ACCENTS.map((a) => ({ group: "Accent color", swatch: a.color, label: a.label, run: () => { applyAccent(a.id); toast(a.label + " accent applied"); } })),
+    ];
+
+    let filtered = [], active = 0;
+    const itemsDom = () => $$(".cmdk__item", listEl);
+
+    function highlight() {
+      const els = itemsDom();
+      els.forEach((el, i) => el.classList.toggle("active", i === active));
+      els[active] && els[active].scrollIntoView({ block: "nearest" });
+    }
+    function render(q) {
+      const f = (q || "").trim().toLowerCase();
+      filtered = commands.filter((c) => !f || (c.label + " " + (c.meta || "") + " " + c.group).toLowerCase().includes(f));
+      listEl.innerHTML = "";
+      if (!filtered.length) { listEl.innerHTML = '<div class="cmdk__empty">No matches</div>'; return; }
+      let lastG = null;
+      filtered.forEach((c) => {
+        if (c.group !== lastG) {
+          const g = document.createElement("div");
+          g.className = "cmdk__group"; g.textContent = c.group;
+          listEl.appendChild(g); lastG = c.group;
+        }
+        const it = document.createElement("div");
+        it.className = "cmdk__item"; it.setAttribute("role", "option");
+        const ico = c.swatch
+          ? `<span class="ico"><span class="swatch" style="background:${c.swatch}"></span></span>`
+          : `<span class="ico">${c.glyph || "›"}</span>`;
+        it.innerHTML = `${ico}<span class="lbl">${c.label}</span>${c.meta ? `<span class="meta">${c.meta}</span>` : ""}`;
+        it.addEventListener("click", () => run(c));
+        const idx = filtered.indexOf(c);
+        it.addEventListener("mousemove", () => { active = idx; highlight(); });
+        listEl.appendChild(it);
+      });
+      active = 0; highlight();
+    }
+    function open() { cmdk.hidden = false; document.body.style.overflow = "hidden"; input.value = ""; render(""); setTimeout(() => input.focus(), 20); }
+    function close() { cmdk.hidden = true; document.body.style.overflow = ""; if (trigger) trigger.focus(); }
+    function run(c) { if (!c) return; close(); setTimeout(() => c.run(), 10); }
+
+    if (trigger) trigger.addEventListener("click", open);
+    const closer = cmdk.querySelector("[data-cmdk-close]");
+    if (closer) closer.addEventListener("click", close);
+    input.addEventListener("input", () => render(input.value));
+    input.addEventListener("keydown", (e) => {
+      if (!filtered.length) return;
+      if (e.key === "ArrowDown") { e.preventDefault(); active = (active + 1) % filtered.length; highlight(); }
+      else if (e.key === "ArrowUp") { e.preventDefault(); active = (active - 1 + filtered.length) % filtered.length; highlight(); }
+      else if (e.key === "Enter") { e.preventDefault(); run(filtered[active]); }
+    });
+    document.addEventListener("keydown", (e) => {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") { e.preventDefault(); cmdk.hidden ? open() : close(); }
+      else if (e.key === "Escape" && !cmdk.hidden) { close(); }
+    });
+  })();
+
+  /* ---------------- Scroll-spy dots + back-to-top ---------------- */
+  (() => {
+    const dotItems = $$(".dots__item");
+    const secIds = ["hero", "about", "stack", "work", "projects", "contact"];
+    const pairs = secIds.map((id, i) => [document.getElementById(id), dotItems[i]]).filter(([s, d]) => s && d);
+    if (pairs.length) {
+      const obs = new IntersectionObserver((entries) => {
+        entries.forEach((e) => {
+          if (!e.isIntersecting) return;
+          dotItems.forEach((d) => d.classList.remove("active"));
+          const p = pairs.find(([s]) => s === e.target);
+          if (p) p[1].classList.add("active");
+        });
+      }, { rootMargin: "-45% 0px -50% 0px", threshold: 0 });
+      pairs.forEach(([s]) => obs.observe(s));
+    }
+
+    const toTop = $("#toTop");
+    if (toTop) {
+      const onScroll = () => toTop.classList.toggle("show", window.scrollY > window.innerHeight * 0.6);
+      onScroll();
+      window.addEventListener("scroll", onScroll, { passive: true });
+      toTop.addEventListener("click", () => window.scrollTo({ top: 0, behavior: "smooth" }));
+    }
   })();
 
   console.log("%c⚡ built from scratch — distributed by design", "color:#22d3ee;font-family:monospace;font-size:13px");

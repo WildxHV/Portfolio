@@ -109,5 +109,12 @@ Nav · Hero · Stats · About (+trace widget) · Stack/Skills · Experience (tim
   - Verified live preview (DOM assertions + screenshots of CookFit card & AI card); **no console errors.**
 - **Copy polish** — Rewrote CookFit card description (punchier opener "watch the nutrition recalc live", "Out of ideas?" hook, resilience framing "so one rate limit never breaks a call", strong close "grows itself, with zero false entries"). Verified render.
 - **Tags** — Delta Exchange experience block: added `Elixir` + `Node.js` (grouped right after Python). Verified.
+- **UI round 2 — more interactivity** — Added 5 features (HTML in `index.html` before `</body>` + nav trigger; CSS appended before MOTION PREFERENCES block; JS appended before final console.log):
+  1. **Command palette** (⌘K / Ctrl+K, + nav `#cmdkTrigger`): live filter, ↑/↓ + Enter, Esc/backdrop close, body scroll-lock while open, `isMac` detection for ⌘ vs Ctrl. Commands: Navigate (6 sections), Actions (copy email→toast, toggle theme), Links (GitHub/LinkedIn/CookFit/email), Accent color (5).
+  2. **Accent themer** — `[data-accent]` on `<html>` overrides `--accent/-2/-3/--grad/--glow(-2)`; presets cyan(default=no attr)/violet/emerald/amber/rose; persisted (`localStorage.accent`); dispatches `themechange`.
+  3. **Scroll-spy dots** (`#dots`, right side, desktop ≥1100px) — IntersectionObserver active state + hover labels.
+  4. **Back-to-top** (`#toTop`) — shows past 0.6×viewport.
+  5. **Skill-card cursor spotlight** — broadened proj-card mousemove to `.proj-card, .skill-card`; `::before` radial; `> *` z-indexed above. + a small **toast** helper.
+  - Verified in preview (dark default + violet test): palette filter/keyboard/run all work, accent recolors site-wide, dots active=Experience at #work, back-to-top shows; **no console errors/warnings.**
 
 <!-- Append new entries above this line, under the correct date -->
