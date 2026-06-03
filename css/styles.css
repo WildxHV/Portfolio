@@ -852,6 +852,16 @@ a.tl-item__company:hover { text-decoration: underline; text-underline-offset: 3p
   color: var(--text-mute);
 }
 .proj-card__metrics b { color: var(--accent); font-weight: 700; font-size: 0.95rem; }
+.proj-card__repo {
+  display: inline-block;
+  margin-top: 1.1rem;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--accent);
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.2s var(--ease);
+}
+.proj-card__repo:hover { border-bottom-color: var(--accent); }
 
 .proj-card--more {
   display: grid;

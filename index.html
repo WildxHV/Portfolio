@@ -37,7 +37,7 @@
   <header class="nav" id="nav">
     <a href="#top" class="nav__logo" aria-label="Home">
       <span class="nav__logo-mark">HV</span>
-      <span class="nav__logo-status" title="Open to opportunities"></span>
+      <span class="nav__logo-status" title="Open to SDE 2 roles"></span>
     </a>
     <nav class="nav__links" id="navLinks" aria-label="Primary">
       <a href="#about" class="nav__link">about</a>
@@ -97,7 +97,7 @@
           <a href="https://www.linkedin.com/in/harshvardhansinghsisodia/" target="_blank" rel="noopener" class="social" aria-label="LinkedIn">
             <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.34V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.07 2.07 0 1 1 0-4.14 2.07 2.07 0 0 1 0 4.14zM7.12 20.45H3.56V9h3.56v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.73C24 .77 23.2 0 22.22 0z"/></svg>
           </a>
-          <a href="mailto:harshrana451@gmail.com" class="social" aria-label="Email">
+          <a href="mailto:hvsisodia02@gmail.com" class="social" aria-label="Email">
             <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>
           </a>
         </div>
@@ -150,8 +150,10 @@
             I think in the numbers behind a system — p95 latency, MTTR, uptime, cloud spend.
             I've cut API latency by up to <strong>90%</strong>, turned 2-hour failed-transaction
             recoveries into <strong>5-minute</strong> automated ones, and kept services online at
-            <strong>99.95%+</strong>. Lately I've been weaving <strong>AI-assisted development</strong>
-            and LLM-powered microservices into how I build.
+            <strong>99.95%+</strong>. And these days I build <em>with</em> AI every day — <strong>Claude Code</strong>
+            and <strong>GitHub Copilot</strong> in my editor, plus <strong>Cursor</strong> and ChatGPT — shipping
+            LLM-powered microservices and multi-provider fallback pipelines like the self-growing
+            catalog in <strong>CookFit</strong>.
           </p>
           <p>
             Outside the diff: I like systems that are observable, tests that catch real bugs,
@@ -162,7 +164,7 @@
             <li><span class="mono about__facts-k">location</span> Bengaluru, India</li>
             <li><span class="mono about__facts-k">focus</span> Distributed systems · Performance · Security</li>
             <li><span class="mono about__facts-k">education</span> B.Tech CSE, MANIT Bhopal · CGPA 8.06</li>
-            <li><span class="mono about__facts-k">status</span> <span class="ok">Open to backend / platform roles</span></li>
+            <li><span class="mono about__facts-k">status</span> <span class="ok">Open to SDE 2 roles</span></li>
           </ul>
         </div>
 
@@ -278,11 +280,13 @@
         </article>
 
         <article class="skill-card reveal">
-          <h3 class="skill-card__title"><span class="skill-card__dot"></span>AI & Tooling</h3>
+          <h3 class="skill-card__title"><span class="skill-card__dot"></span>AI-Assisted Engineering</h3>
           <div class="tags">
+            <span class="tag">Claude Code</span><span class="tag">GitHub Copilot</span>
+            <span class="tag">Cursor</span><span class="tag">ChatGPT / Claude</span>
             <span class="tag">AI-Assisted Dev</span><span class="tag">LLM Microservices</span>
-            <span class="tag">Git</span><span class="tag">Linux</span>
-            <span class="tag">Agile / Scrum</span>
+            <span class="tag">Multi-Provider LLM</span><span class="tag">Git</span>
+            <span class="tag">Linux</span><span class="tag">Agile / Scrum</span>
           </div>
         </article>
       </div>
@@ -388,8 +392,34 @@
         <article class="proj-card glass tilt reveal">
           <div class="proj-card__glow"></div>
           <div class="proj-card__head">
-            <span class="proj-card__tag mono">security</span>
+            <span class="proj-card__tag mono">ai · fullstack</span>
             <span class="proj-card__num mono">/01</span>
+          </div>
+          <h3 class="proj-card__title">CookFit</h3>
+          <p class="proj-card__sub">AI nutrition &amp; home-cooking app · <span class="ok">new this week</span></p>
+          <p class="proj-card__desc">
+            Look up any ingredient or dish and scale nutrition live; tell it
+            <strong>what's in your kitchen</strong> and a <strong>multi-provider LLM fallback</strong>
+            (Groq → Gemini → OpenAI → Grok) suggests classic &amp; fusion dishes. Missing items are
+            LLM-fetched, <strong>strictly validated</strong> (vegetarian, Atwater-consistent macros)
+            and stored — a <strong>self-growing catalog</strong> with no false entries.
+          </p>
+          <div class="proj-card__metrics mono">
+            <span><b>4</b> AI providers</span>
+            <span><b>0</b> false entries</span>
+            <span><b>full-stack</b> + AI</span>
+          </div>
+          <div class="tags tags--mini">
+            <span class="tag">React</span><span class="tag">TypeScript</span><span class="tag">FastAPI</span><span class="tag">SQLAlchemy</span><span class="tag">Tailwind</span><span class="tag">LLM</span>
+          </div>
+          <a href="https://github.com/WildxHV/cookfit" target="_blank" rel="noopener" class="proj-card__repo">View source on GitHub ↗</a>
+        </article>
+
+        <article class="proj-card glass tilt reveal">
+          <div class="proj-card__glow"></div>
+          <div class="proj-card__head">
+            <span class="proj-card__tag mono">security</span>
+            <span class="proj-card__num mono">/02</span>
           </div>
           <h3 class="proj-card__title">Web3 Bug Bounty Platform</h3>
           <p class="proj-card__sub">Secure vulnerability-disclosure platform</p>
@@ -413,7 +443,7 @@
           <div class="proj-card__glow"></div>
           <div class="proj-card__head">
             <span class="proj-card__tag mono">saas</span>
-            <span class="proj-card__num mono">/02</span>
+            <span class="proj-card__num mono">/03</span>
           </div>
           <h3 class="proj-card__title">FindMy Equipments</h3>
           <p class="proj-card__sub">SaaS rental marketplace</p>
@@ -449,7 +479,7 @@
         <span class="section__index mono">05</span>
         <h2 class="contact__title">Let's build something <span class="grad-text">fast & reliable</span>.</h2>
         <p class="contact__sub">
-          Open to backend, platform, and distributed-systems roles. The quickest way to reach me is email.
+          Open to SDE 2 roles. The quickest way to reach me is email.
         </p>
 
         <div class="contact__terminal mono" id="contactTerminal" aria-hidden="true">
@@ -458,9 +488,9 @@
         </div>
 
         <div class="contact__links">
-          <a href="mailto:harshrana451@gmail.com" class="btn btn--primary magnetic">
+          <a href="mailto:hvsisodia02@gmail.com" class="btn btn--primary magnetic">
             <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>
-            <span>harshrana451@gmail.com</span>
+            <span>hvsisodia02@gmail.com</span>
           </a>
           <a href="https://www.linkedin.com/in/harshvardhansinghsisodia/" target="_blank" rel="noopener" class="btn btn--ghost magnetic">Connect on LinkedIn</a>
         </div>

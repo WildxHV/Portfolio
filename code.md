@@ -101,4 +101,11 @@ Nav · Hero · Stats · About (+trace widget) · Stack/Skills · Experience (tim
 - To redeploy: commit to `main` and `git push origin main` (Pages auto-rebuilds). Remote = `git@github.com:WildxHV/Portfolio.git`.
 - Possible future polish: add an SEO `og:image`, a redacted (phone-free) résumé PDF + download button, more projects, custom domain.
 
+- **Content updates (user request)** —
+  - **Email** → `hvsisodia02@gmail.com` everywhere (hero social + contact button text/href; replace_all).
+  - **Status** → "Open to SDE 2 roles" (about-facts `status`, contact sub copy, nav logo `title`); contact terminal cmd → `role=SDE-2`.
+  - **Added CookFit project** as `/01` (newest; renumbered Web3 → /02, FindMy → /03). Linked to its PUBLIC repo `github.com/WildxHV/cookfit`. Card: multi-provider LLM fallback (Groq→Gemini→OpenAI→Grok), self-growing strictly-validated catalog; tags React/TS/FastAPI/SQLAlchemy/Tailwind/LLM; "new this week" badge; added `.proj-card__repo` link style in CSS. (CookFit = FastAPI+React/Vite full-stack AI nutrition app at `C:\Users\Harshvardhan\cookfit`.)
+  - **AI tools** → renamed skill card "AI & Tooling" → "AI-Assisted Engineering"; added Claude Code, GitHub Copilot, Cursor, ChatGPT/Claude, Multi-Provider LLM. Expanded About paragraph to name Claude Code/Copilot/Cursor + tie to CookFit.
+  - Verified live preview (DOM assertions + screenshots of CookFit card & AI card); **no console errors.**
+
 <!-- Append new entries above this line, under the correct date -->

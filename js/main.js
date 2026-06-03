@@ -170,7 +170,7 @@
   (() => {
     const el = $("#contactCmd");
     if (!el) return;
-    const cmd = 'curl -X POST /hire --data "role=backend|platform"';
+    const cmd = 'curl -X POST /hire --data "role=SDE-2"';
     if (reduceMotion) { el.textContent = cmd; return; }
     const obs = new IntersectionObserver((entries, o) => {
       entries.forEach((e) => {
