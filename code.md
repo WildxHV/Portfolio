@@ -90,5 +90,15 @@ Nav · Hero · Stats · About (+trace widget) · Stack/Skills · Experience (tim
 - Status: site feature-complete.
 - **Preview verify** — Static server via `.claude/launch.json` (added `portfolio` config: `python -m http.server 5500`, cwd `portfolio`) on port 5500. Verified: hero (canvas + typed text + magnetic CTAs), stats count-up, about + live trace widget (cache HIT @ 54ms, log streaming), experience timeline, projects, contact (no phone/résumé — correct), mobile layout + slide-in menu, light theme (canvas recolors). **No console errors/warnings.**
 - **Fix** — Added `html { scroll-padding-top: 90px }` so anchor jumps don't hide section titles under the fixed nav. Verified.
+- **Commits** — `9de82e0` (stylesheet), `c0c5b38` (interactivity + log). History: bf812bc → 9de82e0 → c0c5b38.
+- **Deploy** — `git remote add origin git@github.com:WildxHV/Portfolio.git`. Archived old 2023 site to remote branch **`archive-2023`** (sha `01c797f`). `git push --force origin main` (replaced old site). Enabled **GitHub Pages** (main / root) → **https://wildxhv.github.io/Portfolio/** (https enforced). Set repo homepage + description.
+  - Remote branches now: `main` (new site), `archive-2023` (old site — user may delete).
+  - Asset paths are relative, so they work under the `/Portfolio/` sub-path.
+- **✅ LIVE & verified** — https://wildxhv.github.io/Portfolio/ returns HTTP 200; served HTML is the new site (title, `id="net"`, `request_trace.live`, `js/main.js` present); `css/styles.css` + `js/main.js` resolve 200 under `/Portfolio/`. **Done.**
+
+## ▶️ Resume / next-time notes
+- Local dev: `preview_start` config `portfolio` (python http.server :5500), or just open `index.html`.
+- To redeploy: commit to `main` and `git push origin main` (Pages auto-rebuilds). Remote = `git@github.com:WildxHV/Portfolio.git`.
+- Possible future polish: add an SEO `og:image`, a redacted (phone-free) résumé PDF + download button, more projects, custom domain.
 
 <!-- Append new entries above this line, under the correct date -->
