@@ -107,5 +107,6 @@ Nav · Hero · Stats · About (+trace widget) · Stack/Skills · Experience (tim
   - **Added CookFit project** as `/01` (newest; renumbered Web3 → /02, FindMy → /03). Linked to its PUBLIC repo `github.com/WildxHV/cookfit`. Card: multi-provider LLM fallback (Groq→Gemini→OpenAI→Grok), self-growing strictly-validated catalog; tags React/TS/FastAPI/SQLAlchemy/Tailwind/LLM; "new this week" badge; added `.proj-card__repo` link style in CSS. (CookFit = FastAPI+React/Vite full-stack AI nutrition app at `C:\Users\Harshvardhan\cookfit`.)
   - **AI tools** → renamed skill card "AI & Tooling" → "AI-Assisted Engineering"; added Claude Code, GitHub Copilot, Cursor, ChatGPT/Claude, Multi-Provider LLM. Expanded About paragraph to name Claude Code/Copilot/Cursor + tie to CookFit.
   - Verified live preview (DOM assertions + screenshots of CookFit card & AI card); **no console errors.**
+- **Copy polish** — Rewrote CookFit card description (punchier opener "watch the nutrition recalc live", "Out of ideas?" hook, resilience framing "so one rate limit never breaks a call", strong close "grows itself, with zero false entries"). Verified render.
 
 <!-- Append new entries above this line, under the correct date -->
