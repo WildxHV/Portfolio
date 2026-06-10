@@ -117,4 +117,20 @@ Nav · Hero · Stats · About (+trace widget) · Stack/Skills · Experience (tim
   5. **Skill-card cursor spotlight** — broadened proj-card mousemove to `.proj-card, .skill-card`; `::before` radial; `> *` z-indexed above. + a small **toast** helper.
   - Verified in preview (dark default + violet test): palette filter/keyboard/run all work, accent recolors site-wide, dots active=Experience at #work, back-to-top shows; **no console errors/warnings.**
 
+### 2026-06-10
+- **Animations round 3 — "make it look cool"** (HTML: noscript reveal fallback in `<head>`, marquee div between Stats & About, footer pulse-dot → ECG svg; CSS appended as "ANIMATIONS ROUND 3" before MOTION PREFERENCES; JS: theme-toggle listener replaced + 6 modules appended before final console.log):
+  1. **Hero letter cascade** — JS TreeWalker wraps each non-space char of `.hero__name` in `span.ch` (preserves `<br>` + `.grad-text`), per-char `--d` delay (0.08 + i*0.034s), `@keyframes chIn` (translateY+rotate+scale+blur→sharp). Gradient continuity: per-char `--gs`/`--gp` slices background across the 12 grad chars (no calc division; values precomputed in JS).
+  2. **Gradient shimmer** — `.grad-text` bg-size 220% + `gradFlow` 7s alternate (visible on contact title; inert on split hero parent).
+  3. **Tech marquee** — 12 items ×2 groups (dup `aria-hidden`), `marqueeMove` 38s `translateX(-50%)` (seamless: gap-free track, groups carry `padding-right`), edge fade via mask, pause on hover + offscreen (IO adds `.offscreen`).
+  4. **Section-title decode** — IO (0.6) scramble→resolve via rAF (~3 frames/char), charset `!<>-_/[]{}=+*^?#$%&`, `aria-label` set to original before scrambling. Verified mid-scramble ("Stac-") and settled state.
+  5. **Timeline scroll-draw** — JS injects `.timeline__progress` (gradient, scaleY 0→1 by scroll, rAF-deduped) + `.tl-item.passed` marker ignition; track `::before` dimmed via `.has-progress`.
+  6. **Conic border sweep** — `@property --ang` + rotating conic-gradient ring (mask composite) on `.stat:hover` / `.proj-card:hover`.
+  7. **Button shine** — `.btn--primary::after` skewed light sweep on hover (transform-based).
+  8. **Tag pop-in stagger** — JS sets `--i` per tag in skill cards; `tagIn` animation on `.is-in` (animation not transition → hover transitions unaffected).
+  9. **Hero parallax exit** — `.hero__inner` translateY(0.22×scroll) + fade; `.hero__scroll` fades by 220px (rAF-deduped, skipped past 1.2×vh).
+  10. **Theme circular reveal** — `document.startViewTransition` + clip-path circle from toggle center (`::view-transition-new(root)` animate; old/new default anims disabled in CSS). Fallback: instant apply (unsupported/reduced-motion).
+  11. **Grid drift** (80s bg-position loop) + **footer ECG** (polyline dash-offset travel, `--ok` colored).
+  - All gated on `reduceMotion` (JS) / global reduced-motion CSS; `<noscript>` shows `.reveal` content.
+  - Verified in preview: 24 chars split w/ continuous gradient, marquee anim running (38s), decode caught mid-scramble + settles w/ aria-label, timeline bar scaleY(0.51) + 2 markers passed at mid-#work, theme VT supported + dark↔light both ways, **no console errors/warnings**.
+
 <!-- Append new entries above this line, under the correct date -->

@@ -22,9 +22,22 @@
     if (saved) root.setAttribute("data-theme", saved);
     btn?.addEventListener("click", () => {
       const next = root.getAttribute("data-theme") === "light" ? "dark" : "light";
-      root.setAttribute("data-theme", next);
-      localStorage.setItem("theme", next);
-      window.dispatchEvent(new Event("themechange"));
+      const apply = () => {
+        root.setAttribute("data-theme", next);
+        localStorage.setItem("theme", next);
+        window.dispatchEvent(new Event("themechange"));
+      };
+      // circular reveal from the toggle (View Transitions API, progressive)
+      if (!document.startViewTransition || reduceMotion) { apply(); return; }
+      const r = btn.getBoundingClientRect();
+      const x = r.left + r.width / 2, y = r.top + r.height / 2;
+      const radius = Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y));
+      document.startViewTransition(apply).ready.then(() => {
+        document.documentElement.animate(
+          { clipPath: [`circle(0px at ${x}px ${y}px)`, `circle(${radius}px at ${x}px ${y}px)`] },
+          { duration: 600, easing: "cubic-bezier(.22,.61,.36,1)", pseudoElement: "::view-transition-new(root)" }
+        );
+      }).catch(() => {});
     });
   })();
 
@@ -557,6 +570,120 @@
       window.addEventListener("scroll", onScroll, { passive: true });
       toTop.addEventListener("click", () => window.scrollTo({ top: 0, behavior: "smooth" }));
     }
+  })();
+
+  /* ---------------- Hero letter cascade ---------------- */
+  (() => {
+    const h = $(".hero__name");
+    if (!h || reduceMotion) return;
+    const walker = document.createTreeWalker(h, NodeFilter.SHOW_TEXT);
+    const nodes = [];
+    while (walker.nextNode()) nodes.push(walker.currentNode);
+    let gi = 0;
+    nodes.forEach((node) => {
+      const frag = document.createDocumentFragment();
+      for (const ch of node.textContent) {
+        if (/\s/.test(ch)) { frag.appendChild(document.createTextNode(ch)); continue; }
+        const s = document.createElement("span");
+        s.className = "ch";
+        s.textContent = ch;
+        s.style.setProperty("--d", (0.08 + gi * 0.034).toFixed(3) + "s");
+        gi++;
+        frag.appendChild(s);
+      }
+      node.parentNode.replaceChild(frag, node);
+    });
+    // slice the gradient across the second line so it reads as one sweep
+    const g = $(".grad-text", h);
+    if (g) {
+      const chs = $$(".ch", g), n = chs.length;
+      chs.forEach((c, i) => {
+        c.style.setProperty("--gs", n * 100 + "%");
+        c.style.setProperty("--gp", (n > 1 ? (i / (n - 1)) * 100 : 0).toFixed(2) + "%");
+      });
+    }
+    h.classList.add("split");
+  })();
+
+  /* ---------------- Section-title decode effect ---------------- */
+  (() => {
+    if (reduceMotion) return;
+    const CHARS = "!<>-_/[]{}=+*^?#$%&";
+    const obs = new IntersectionObserver((entries, o) => {
+      entries.forEach((e) => {
+        if (!e.isIntersecting) return;
+        o.unobserve(e.target);
+        const el = e.target, orig = el.textContent;
+        el.setAttribute("aria-label", orig);
+        const totalFrames = Math.max(orig.length * 3, 24);
+        let frame = 0;
+        const tick = () => {
+          frame++;
+          const solved = Math.floor((frame / totalFrames) * orig.length);
+          el.textContent =
+            orig.slice(0, solved) +
+            orig.slice(solved).split("").map((c) => (c === " " ? " " : CHARS[(Math.random() * CHARS.length) | 0])).join("");
+          if (solved < orig.length) requestAnimationFrame(tick);
+          else el.textContent = orig;
+        };
+        requestAnimationFrame(tick);
+      });
+    }, { threshold: 0.6 });
+    $$(".section__title").forEach((t) => obs.observe(t));
+  })();
+
+  /* ---------------- Timeline scroll-draw + marker ignition ---------------- */
+  (() => {
+    const tl = $(".timeline");
+    if (!tl || reduceMotion) return;
+    tl.classList.add("has-progress");
+    const bar = document.createElement("span");
+    bar.className = "timeline__progress";
+    bar.setAttribute("aria-hidden", "true");
+    tl.appendChild(bar);
+    const items = $$(".tl-item", tl);
+    let ticking = false;
+    const update = () => {
+      ticking = false;
+      const r = tl.getBoundingClientRect();
+      const p = Math.min(Math.max((innerHeight * 0.72 - r.top) / r.height, 0), 1);
+      bar.style.transform = `scaleY(${p.toFixed(4)})`;
+      items.forEach((it) => {
+        it.classList.toggle("passed", it.getBoundingClientRect().top < innerHeight * 0.72);
+      });
+    };
+    window.addEventListener("scroll", () => { if (!ticking) { ticking = true; requestAnimationFrame(update); } }, { passive: true });
+    window.addEventListener("resize", update);
+    update();
+  })();
+
+  /* ---------------- Tag stagger indices ---------------- */
+  $$(".skill-card").forEach((card) => $$(".tag", card).forEach((t, i) => t.style.setProperty("--i", i)));
+
+  /* ---------------- Hero parallax exit ---------------- */
+  (() => {
+    if (reduceMotion) return;
+    const inner = $(".hero__inner"), hint = $(".hero__scroll");
+    if (!inner) return;
+    let ticking = false;
+    const update = () => {
+      ticking = false;
+      const y = window.scrollY;
+      if (y > innerHeight * 1.2) return;
+      inner.style.transform = `translateY(${(y * 0.22).toFixed(1)}px)`;
+      inner.style.opacity = Math.max(1 - y / (innerHeight * 0.9), 0).toFixed(3);
+      if (hint) hint.style.opacity = Math.max(1 - y / 220, 0).toFixed(3);
+    };
+    window.addEventListener("scroll", () => { if (!ticking) { ticking = true; requestAnimationFrame(update); } }, { passive: true });
+  })();
+
+  /* ---------------- Marquee: pause offscreen ---------------- */
+  (() => {
+    const m = $(".marquee");
+    if (!m) return;
+    new IntersectionObserver((es) =>
+      es.forEach((e) => m.classList.toggle("offscreen", !e.isIntersecting))
+    ).observe(m);
   })();
 
   console.log("%c⚡ built from scratch — distributed by design", "color:#22d3ee;font-family:monospace;font-size:13px");

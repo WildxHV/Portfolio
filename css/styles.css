@@ -1065,6 +1065,174 @@ a.tl-item__company:hover { text-decoration: underline; text-underline-offset: 3p
 .toast.show { opacity: 1; transform: translateX(-50%); }
 
 /* ===================================================================
+   ANIMATIONS ROUND 3 — cinematic load · scroll life · micro-delights
+   =================================================================== */
+
+/* --- hero letter cascade (chars wrapped by JS; .split added on <h1>) --- */
+.hero__name.split .ch {
+  display: inline-block;
+  animation: chIn 0.7s var(--ease-out) both;
+  animation-delay: var(--d, 0s);
+  will-change: transform, filter;
+}
+@keyframes chIn {
+  from { opacity: 0; transform: translateY(0.6em) rotate(5deg) scale(0.94); filter: blur(7px); }
+}
+/* per-char slice of the continuous gradient (set via --gs/--gp from JS) */
+.hero__name.split .grad-text .ch {
+  background: var(--grad);
+  background-size: var(--gs, 200%) 100%;
+  background-position: var(--gp, 0) 0;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* --- gradient shimmer (contact headline; harmless on split hero) --- */
+.grad-text {
+  background-size: 220% 220%;
+  animation: gradFlow 7s ease-in-out infinite alternate;
+}
+@keyframes gradFlow {
+  from { background-position: 0% 50%; }
+  to   { background-position: 100% 50%; }
+}
+
+/* --- tech marquee --- */
+.marquee {
+  overflow: hidden;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  background: var(--panel);
+  padding: 0.85rem 0;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+}
+.marquee__track {
+  display: flex;
+  width: max-content;
+  animation: marqueeMove 38s linear infinite;
+  will-change: transform;
+}
+.marquee:hover .marquee__track,
+.marquee.offscreen .marquee__track { animation-play-state: paused; }
+.marquee__group {
+  display: flex;
+  align-items: center;
+  gap: 2.4rem;
+  padding-right: 2.4rem;
+}
+.marquee__item {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-mute);
+  white-space: nowrap;
+  transition: color 0.25s;
+}
+.marquee:hover .marquee__item { color: var(--text-dim); }
+.marquee__sep { color: var(--accent); font-size: 0.55rem; opacity: 0.85; }
+@keyframes marqueeMove { to { transform: translateX(-50%); } }
+
+/* --- section-title decode: keep height stable (JS swaps text) --- */
+.section__title { font-variant-ligatures: none; }
+
+/* --- timeline scroll-draw --- */
+.timeline.has-progress::before { opacity: 0.16; }
+.timeline__progress {
+  position: absolute;
+  left: 7px; top: 6px; bottom: 6px;
+  width: 2px;
+  border-radius: 2px;
+  background: linear-gradient(var(--accent), var(--accent-2), var(--accent-3));
+  box-shadow: 0 0 12px var(--glow);
+  transform: scaleY(0);
+  transform-origin: top;
+  will-change: transform;
+}
+.tl-item__marker span { transition: background 0.4s var(--ease), box-shadow 0.4s var(--ease); }
+.tl-item.passed .tl-item__marker span {
+  background: var(--accent);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--bg) 80%, transparent), 0 0 18px var(--accent);
+}
+
+/* --- rotating conic border sweep (stats + project cards) --- */
+@property --ang {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+.stat::before, .proj-card::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  padding: 1px;
+  background: conic-gradient(from var(--ang), transparent 0 70%, var(--accent) 86%, transparent 100%);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+          mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+          mask-composite: exclude;
+  opacity: 0;
+  transition: opacity 0.35s;
+  pointer-events: none;
+}
+.stat:hover::before, .proj-card:hover::before {
+  opacity: 1;
+  animation: angSpin 2.6s linear infinite;
+}
+@keyframes angSpin { to { --ang: 360deg; } }
+
+/* --- primary button shine sweep --- */
+.btn--primary { position: relative; overflow: hidden; }
+.btn--primary::after {
+  content: "";
+  position: absolute;
+  top: 0; bottom: 0; left: -45%;
+  width: 35%;
+  background: linear-gradient(100deg, transparent, rgba(255, 255, 255, 0.55), transparent);
+  transform: skewX(-18deg) translateX(0);
+  transition: transform 0.65s var(--ease);
+  pointer-events: none;
+}
+.btn--primary:hover::after { transform: skewX(-18deg) translateX(480%); }
+
+/* --- staggered tag pop-in (skill cards; --i set by JS) --- */
+.skill-card.is-in .tag {
+  animation: tagIn 0.55s var(--ease-out) both;
+  animation-delay: calc(var(--i, 0) * 45ms + 0.15s);
+}
+@keyframes tagIn {
+  from { opacity: 0; transform: translateY(9px) scale(0.9); }
+}
+
+/* --- drifting background grid --- */
+.grid-overlay { animation: gridDrift 80s linear infinite; }
+@keyframes gridDrift {
+  to { background-position: 54px 54px, 54px 54px; }
+}
+
+/* --- footer ECG heartbeat --- */
+.ecg { color: var(--ok); vertical-align: -2px; }
+.ecg polyline {
+  stroke-dasharray: 50;
+  stroke-dashoffset: 50;
+  animation: ecgRun 2.4s linear infinite;
+}
+@keyframes ecgRun { to { stroke-dashoffset: -50; } }
+
+/* --- logo tilt on hover --- */
+.nav__logo-mark { transition: transform 0.35s var(--ease); }
+.nav__logo:hover .nav__logo-mark { transform: rotate(-8deg) scale(1.08); }
+
+/* --- theme-switch circular reveal (View Transitions API) --- */
+::view-transition-old(root), ::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+/* ===================================================================
    MOTION PREFERENCES
    =================================================================== */
 @media (prefers-reduced-motion: reduce) {
